@@ -1,33 +1,38 @@
 var inquirer = require("inquirer");
-//var optionsHandler = require("optionsHandler");
+var optionsHandler = require("./optionsHandler");
 
-inquirer
-  .prompt([
-    {
-      type: "checkbox",
-      message: "Options",
-      name: "toppings",
-      choices: [
-        new inquirer.Separator(""),
-        {
-          name: "Show your tasks",
+inquirer.displayOptions = function () {
+  inquirer
+    .prompt([
+      {
+        type: "checkbox",
+        message: "Options",
+        name: "toppings",
+        choices: [
+          {
+            name: "Show your tasks",
+          },
+          {
+            name: "Add new Task",
+          },
+          {
+            name: "Delete a task",
+          },
+          {
+            name: "Exit",
+          },
+        ],
+        validate: function (answer) {
+          if (answer.length > 1) {
+            return "You must select just one option";
+          }
+          return true;
         },
-        {
-          name: "Add new Task",
-        },
-        {
-          name: "Exit",
-        },
-      ],
-      validate: function (answer) {
-        if (answer.length > 1) {
-          return "You must select just one option";
-        }
-        return true;
       },
-    },
-  ])
-  .then((answers) => {
-    handleOptions(answers);
-    console.log(JSON.stringify(answers, null, "  "));
-  });
+    ])
+    .then((answers) => {
+      optionsHandler(inquirer, answers.toppings[0]);
+    });
+};
+
+inquirer.displayOptions();
